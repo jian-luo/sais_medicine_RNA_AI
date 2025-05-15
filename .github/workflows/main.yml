@@ -23,6 +23,16 @@ jobs:
           username: ${{ secrets.ALIYUN_REGISTRY_USER }}
           password: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
 
+      # 显式配置 Docker DNS
+      - name: Set up Docker Buildx with DNS
+        uses: docker/setup-buildx-action@v3
+        with:
+          config-inline: |
+            [registry."crpi-j82a4dxirz282twg.cn-guangzhou.personal.cr.aliyuncs.com/jianluo_docker/sais_medicine_rna"]
+              mirrors = ["crpi-j82a4dxirz282twg.cn-guangzhou.personal.cr.aliyuncs.com/jianluo_docker/sais_medicine_rna"]
+            [dns]
+              nameservers = ["8.8.8.8", "1.1.1.1"]
+
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.ALIYUN_REGISTRY }}/jianluo_docker/sais_medicine_rna:latest .
